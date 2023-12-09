@@ -32,7 +32,7 @@ export const handler = async (event) => {
       });
       if (assistant) {
         const run = await openai.beta.threads.runs.create(thread.id, {
-          assistant_id: assistant.id,
+          assistant_id: newAssistant.id,
         });
         const messages = await openai.beta.threads.messages.list(thread.id);
         console.log({ messages });

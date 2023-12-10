@@ -29,7 +29,6 @@ export const handler = async (event) => {
       const assistant = await openai.beta.assistants.retrieve(
         "asst_8viYrYw1MYW1hunEIadzGnkq"
       );
-      console.log({ assistant });
       const thread = await openai.beta.threads.create();
       const message = await openai.beta.threads.messages.create(thread.id, {
         role: "user",
@@ -52,6 +51,7 @@ export const handler = async (event) => {
             thread.id,
             run.id
           );
+          console.log({ runStatus });
         }
 
         messages = await openai.beta.threads.messages.list(thread.id);

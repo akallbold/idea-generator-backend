@@ -40,6 +40,21 @@ export const handler = async (event) => {
         });
         console.log({ run });
 
+        let runStatus = await openai.beta.threads.runs.retrieve(
+          thread.id,
+          run.id
+        );
+
+        // Polling mechanism to see if runStatus is completed
+        // This should be made more robust.
+        while (runStatus.status !== "completed") {
+          await new Promise((resolve) => setTimeout(resolve, 2000));
+          runStatus = await openai.beta.threads.runs.retrieve(
+            thread.id,
+            run.id
+          );
+        }
+
         messages = await openai.beta.threads.messages.list(thread.id);
         const data = messages.body.data.forEach((message) =>
           console.log(message.content)

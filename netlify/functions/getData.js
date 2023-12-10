@@ -30,7 +30,7 @@ export const handler = async (event) => {
         role: "user",
         content: `Object 1: ${object1}\nObject 2: ${object2}\n\n`,
       });
-      if (assistant) {
+      if (newAssistant) {
         const run = await openai.beta.threads.runs.create(thread.id, {
           assistant_id: newAssistant.id,
         });

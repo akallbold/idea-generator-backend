@@ -15,6 +15,7 @@ const openai = new OpenAI({ apiKey });
 
 export const handler = async (event) => {
   let messages;
+  let lastMessageForRun;
   if (event.body) {
     const data = JSON.parse(event.body);
     const { object1, object2 } = data;
@@ -45,10 +46,8 @@ export const handler = async (event) => {
           run.id
         );
 
-        // Polling mechanism to see if runStatus is completed
-        // This should be made more robust.
         while (runStatus.status !== "completed") {
-          await new Promise((resolve) => setTimeout(resolve, 2000));
+          await new Promise((resolve) => setTimeout(resolve, 200));
           runStatus = await openai.beta.threads.runs.retrieve(
             thread.id,
             run.id
@@ -59,6 +58,13 @@ export const handler = async (event) => {
         const data = messages.body.data.forEach((message) =>
           console.log(message.content)
         );
+        lastMessageForRun = messages.data
+          .filter(
+            (message) =>
+              message.run_id === run.id && message.role === "assistant"
+          )
+          .pop();
+        console.log({ lastMessageForRun });
       }
     } catch (err) {
       console.error(err);
@@ -68,7 +74,7 @@ export const handler = async (event) => {
       statusCode: 200,
       headers,
       body: JSON.stringify({
-        message: messages,
+        message: lastMessageForRun,
       }),
     };
   }

@@ -19,22 +19,29 @@ export const handler = async (event) => {
     const data = JSON.parse(event.body);
     const { object1, object2 } = data;
     try {
-      const newAssistant = await openai.beta.assistants.create({
-        name: assistantConfig.name,
-        instructions: assistantConfig.instructions,
-        tools: assistantConfig.tools,
-        model: assistantConfig.model,
-      });
+      // const newAssistant = await openai.beta.assistants.create({
+      //   name: assistantConfig.name,
+      //   instructions: assistantConfig.instructions,
+      //   tools: assistantConfig.tools,
+      //   model: assistantConfig.model,
+      // });
+      const assistant = await openai.beta.assistants.retrieve(
+        "asst_8viYrYw1MYW1hunEIadzGnkq"
+      );
+      console.log({ assistant });
       const thread = await openai.beta.threads.create();
       const message = await openai.beta.threads.messages.create(thread.id, {
         role: "user",
         content: `Object 1: ${object1}\nObject 2: ${object2}\n\n`,
       });
-      if (newAssistant) {
+      if (assistant) {
         const run = await openai.beta.threads.runs.create(thread.id, {
-          assistant_id: newAssistant.id,
+          assistant_id: assistant.id,
         });
         messages = await openai.beta.threads.messages.list(thread.id);
+        const data = messages.body.data.forEach((message) =>
+          console.log(message.content)
+        );
       }
     } catch (err) {
       console.error(err);

@@ -14,10 +14,10 @@ const apiKey = process.env.REACT_APP_OPENAI_API_KEY;
 const openai = new OpenAI({ apiKey });
 
 export const handler = async (event) => {
+  let messages;
   if (event.body) {
     const data = JSON.parse(event.body);
     const { object1, object2 } = data;
-    console.log({ object1, object2 });
     try {
       const newAssistant = await openai.beta.assistants.create({
         name: assistantConfig.name,
@@ -34,8 +34,7 @@ export const handler = async (event) => {
         const run = await openai.beta.threads.runs.create(thread.id, {
           assistant_id: newAssistant.id,
         });
-        const messages = await openai.beta.threads.messages.list(thread.id);
-        console.log({ messages });
+        messages = await openai.beta.threads.messages.list(thread.id);
       }
     } catch (err) {
       console.error(err);

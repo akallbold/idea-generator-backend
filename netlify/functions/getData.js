@@ -38,6 +38,8 @@ export const handler = async (event) => {
         const run = await openai.beta.threads.runs.create(thread.id, {
           assistant_id: assistant.id,
         });
+        console.log({ run });
+
         messages = await openai.beta.threads.messages.list(thread.id);
         const data = messages.body.data.forEach((message) =>
           console.log(message.content)

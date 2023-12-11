@@ -16,6 +16,7 @@ const openai = new OpenAI({ apiKey });
 export const handler = async (event) => {
   let messages;
   let lastMessageForRun;
+  console.log(event.body);
   if (event.body) {
     const data = JSON.parse(event.body);
     const { object1, object2 } = data;
@@ -36,7 +37,7 @@ export const handler = async (event) => {
         role: "user",
         content: `Object 1: ${object1}\nObject 2: ${object2}\n\n`,
       });
-      console.log("here2");
+      console.log("here2", { message });
       if (assistant) {
         console.log("here3");
         const run = await openai.beta.threads.runs.create(thread.id, {

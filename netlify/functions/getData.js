@@ -29,22 +29,27 @@ export const handler = async (event) => {
       const assistant = await openai.beta.assistants.retrieve(
         "asst_8viYrYw1MYW1hunEIadzGnkq"
       );
+      console.log("here");
       const thread = await openai.beta.threads.create();
+      console.log("here1");
       const message = await openai.beta.threads.messages.create(thread.id, {
         role: "user",
         content: `Object 1: ${object1}\nObject 2: ${object2}\n\n`,
       });
+      console.log("here2");
       if (assistant) {
+        console.log("here3");
         const run = await openai.beta.threads.runs.create(thread.id, {
           assistant_id: assistant.id,
         });
+        console.log("here4");
         console.log({ run });
 
         let runStatus = await openai.beta.threads.runs.retrieve(
           thread.id,
           run.id
         );
-
+        console.log("here5");
         while (runStatus.status !== "completed") {
           await new Promise((resolve) => setTimeout(resolve, 200));
           runStatus = await openai.beta.threads.runs.retrieve(
@@ -53,11 +58,13 @@ export const handler = async (event) => {
           );
           console.log({ runStatus });
         }
-
+        console.log("here6");
         messages = await openai.beta.threads.messages.list(thread.id);
+        console.log("here7");
         const data = messages.body.data.forEach((message) =>
           console.log(message.content)
         );
+        console.log("here8");
         lastMessageForRun = messages.data
           .filter(
             (message) =>

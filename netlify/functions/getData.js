@@ -52,9 +52,7 @@ export const handler = async (event) => {
           console.log({ runStatus });
         }
         messages = await openai.beta.threads.messages.list(thread.id);
-        const data = messages.body.data.forEach((message) =>
-          console.log(message.content)
-        );
+        const data = messages.body.data;
         console.log("here8", { data });
         // lastMessageForRun = messages.data
         //   .filter(

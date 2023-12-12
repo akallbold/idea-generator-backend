@@ -1,4 +1,5 @@
 import OpenAI from "openai";
+
 const assistantConfig = {
   name: "Idea Generator",
   instructions:
@@ -6,6 +7,7 @@ const assistantConfig = {
   tools: [{ type: "retrieval" }],
   model: "gpt-4-1106-preview",
 };
+
 const headers = {
   "Access-Control-Allow-Origin": "*",
   "Access-Control-Allow-Methods": "POST, OPTION",
@@ -54,13 +56,13 @@ export const handler = async (event) => {
           console.log(message.content)
         );
         console.log("here8", { data });
-        lastMessageForRun = messages.data
-          .filter(
-            (message) =>
-              message.run_id === run.id && message.role === "assistant"
-          )
-          .pop();
-        console.log({ lastMessageForRun });
+        // lastMessageForRun = messages.data
+        //   .filter(
+        //     (message) =>
+        //       message.run_id === run.id && message.role === "assistant"
+        //   )
+        //   .pop();
+        // console.log({ lastMessageForRun });
       }
     } catch (err) {
       console.error(err);
@@ -70,7 +72,7 @@ export const handler = async (event) => {
       statusCode: 200,
       headers,
       body: JSON.stringify({
-        message: lastMessageForRun,
+        message: data,
       }),
     };
   }

@@ -16,7 +16,7 @@ const apiKey = process.env.REACT_APP_OPENAI_API_KEY;
 const openai = new OpenAI({ apiKey });
 
 export const handler = async (event) => {
-  let lastMessageForRun;
+  let data;
   if (event.body) {
     const data = JSON.parse(event.body);
     const { object1, object2 } = data;
@@ -52,15 +52,7 @@ export const handler = async (event) => {
           console.log({ runStatus });
         }
         messages = await openai.beta.threads.messages.list(thread.id);
-        const data = messages.body.data;
-        console.log("here8", { data });
-        // lastMessageForRun = messages.data
-        //   .filter(
-        //     (message) =>
-        //       message.run_id === run.id && message.role === "assistant"
-        //   )
-        //   .pop();
-        // console.log({ lastMessageForRun });
+        data = messages.body.data;
       }
     } catch (err) {
       console.error(err);

@@ -53,7 +53,7 @@ export const handler = async (event) => {
           console.log({ runStatus });
         }
         messages = await openai.beta.threads.messages.list(thread.id);
-        const responseData = messages.body.data;
+        responseData = messages.body.data;
 
         console.log("here8", { responseData });
         // lastMessageForRun = messages.data
@@ -63,17 +63,32 @@ export const handler = async (event) => {
         //   )
         //   .pop();
         // console.log({ lastMessageForRun });
+
+        return {
+          statusCode: 200,
+          headers,
+          body: JSON.stringify({
+            message: responseData,
+          }),
+        };
       }
     } catch (err) {
       console.error(err);
+      return {
+        statusCode: err.statusCode || 500,
+        headers,
+        body: JSON.stringify({
+          message: err.message || "Something went wrong",
+        }),
+      };
     }
 
-    return {
-      statusCode: 200,
-      headers,
-      body: JSON.stringify({
-        message: responseData,
-      }),
-    };
+    // return {
+    //   statusCode: 200,
+    //   headers,
+    //   body: JSON.stringify({
+    //     message: responseData,
+    //   }),
+    // };
   }
 };

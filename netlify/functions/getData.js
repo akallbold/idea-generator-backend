@@ -50,12 +50,11 @@ export const handler = async (event) => {
             thread.id,
             run.id
           );
-          console.log({ runStatus });
         }
         messages = await openai.beta.threads.messages.list(thread.id);
         responseData = messages.body.data;
 
-        console.log("here8", { responseData });
+        console.log("run completed!", { responseData });
         // lastMessageForRun = messages.data
         //   .filter(
         //     (message) =>

@@ -17,6 +17,7 @@ const openai = new OpenAI({ apiKey });
 
 export const handler = async (event) => {
   let lastMessageForRun;
+  let responseData;
   if (event.body) {
     const data = JSON.parse(event.body);
     const { object1, object2 } = data;
@@ -52,9 +53,9 @@ export const handler = async (event) => {
           console.log({ runStatus });
         }
         messages = await openai.beta.threads.messages.list(thread.id);
-        const data = messages.body.data;
+        const responseData = messages.body.data;
 
-        console.log("here8", { data });
+        console.log("here8", { responseData });
         // lastMessageForRun = messages.data
         //   .filter(
         //     (message) =>
@@ -71,7 +72,7 @@ export const handler = async (event) => {
       statusCode: 200,
       headers,
       body: JSON.stringify({
-        message: data,
+        message: responseData,
       }),
     };
   }
